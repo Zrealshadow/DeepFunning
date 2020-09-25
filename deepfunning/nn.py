@@ -108,7 +108,7 @@ def Transformer(src_vocab,tag_vocab,N=6,d_model=512,d_ff=2058,h=8,dropout=0.1):
 
 ''' ------------------------- CRF Model --------------------------- '''
 
-from deepfunning.model.crf import CRF
+import deepfunning.model.crf as crf
 '''
 Args:
     tag_nums : num of labels
@@ -134,5 +134,33 @@ public method:
             batch_best_path : list of every text's predicted tags | batch_size * len ,len is not unchanged
 '''
 def CRF(tag_nums,is_padding=False,start_tag=None,end_tag=None):
-    return CRF(tag_nums,is_padding=False,start_tag=None,end_tag=None)
+    return crf.CRF(tag_nums,is_padding=False,start_tag=None,end_tag=None)
 
+
+'''------------------------ Hidden Markov Model -------------------------'''
+
+import deepfunning.model.hmm as hmm
+'''
+Args:
+    N: The num of hidden states
+    M: The num of observed states
+
+Public Method:
+    train(word_lists,tag_lists,word2id,tag2id):
+        Args:
+            word_lists : list  batch_size * word_list
+            tag_lists : list batch_size * tag_list
+            word2id : dict 
+            tag2id  : dict
+        Returns:
+            null
+    test(test_word_lists,word2id,tag2id):
+        Args:
+            test_word_lists : list batch_size * word_list
+            word2id : dict
+            tag2id : dict
+        Returns:
+            pred_tag_list: list batch_size * word_list
+'''
+def HMM(N,M):
+    return hmm.HMM(N,M)

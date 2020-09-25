@@ -1,4 +1,9 @@
-
+'''
+ * @author Waldinsamkeit
+ * @email Zenglz_pro@163.com
+ * @create date 2020-09-25 14:33:28
+ * @desc 
+'''
 
 import torch
 import torch.autograd as autograd
@@ -67,7 +72,7 @@ class HMM(object):
         self.logB=torch.log(self.B)
         self.logPi=torch.log(self.Pi)
 
-    def test(self,test_word_lists,_,word2id,tag2id):
+    def test(self,test_word_lists,word2id,tag2id):
         pred_tag_lists=[]
         # for test_word_list in test_word_lists:
         #     pred_tag_list=self.decoding(test_word_list,word2id,tag2id)
