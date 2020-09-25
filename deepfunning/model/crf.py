@@ -10,6 +10,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import numpy as np
+
 class CRF(nn.Module):
     '''条件随机场
        因为在组合模型中一次又一次 重写CRF代码，于是用重写这个类，将模块抽离出来

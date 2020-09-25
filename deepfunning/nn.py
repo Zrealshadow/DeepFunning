@@ -164,3 +164,6 @@ Public Method:
 '''
 def HMM(N,M):
     return hmm.HMM(N,M)
+
+
+
