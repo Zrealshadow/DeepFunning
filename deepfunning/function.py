@@ -33,7 +33,7 @@ In some degree, it can reduce the influence of imbalanced dataset
 
 def focal_loss(y_true,y_pred,device):
     alpha,gamma = torch.tensor(0.25).to(device) , torch.tensor(2.0).to(device)
-    y_pred=torch.clamp(y_pred,1e-8,1-1e-8)
+    y_pred=torch.clamp(y_pred,1e-7,1-1e-7)
     return - alpha * y_true * torch.log(y_pred) * (1 - y_pred) ** gamma\
         - (1 - alpha) * (1 - y_true) * torch.log(1 -  y_pred) * y_pred
 

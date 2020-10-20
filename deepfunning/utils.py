@@ -5,8 +5,8 @@
  * @desc 
 '''
 import torch
-
-
+import numpy as np
+import random
 
 
 ''' ------------Exponential Moving Average ------------'''
@@ -65,4 +65,24 @@ class EMA():
         # self.backup=[]
         
 
-
+""" Set random seed"""
+def set_random_seed(seed = 10, deterministic = False, benchmark = False):
+    """
+    Args:
+        seed: Random Seed
+        deterministic:
+                Deterministic operation may have a negative single-run performance impact, depending on the composition of your model. 
+                Due to different underlying operations, which may be slower, the processing speed (e.g. the number of batches trained per second) may be lower than when the model functions nondeterministically. 
+                However, even though single-run speed may be slower, depending on your application determinism may save time by facilitating experimentation, debugging, and regression testing.
+        benchmark: whether cudnn to find most efficient method to process data
+                If no difference of the size or dimension in the input data, Setting it true is a good way to speed up
+                However, if not,  every iteration, cudnn has to find best algorithm, it cost a lot
+    """
+    random.seed(seed)
+    np.random(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    if deterministic:
+        torch.backends.cudnn.deterministic = True
+    if benchmark:
+        torch.backends.cudnn.benchmark = True
