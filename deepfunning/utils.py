@@ -79,7 +79,7 @@ def set_random_seed(seed = 10, deterministic = False, benchmark = False):
                 However, if not,  every iteration, cudnn has to find best algorithm, it cost a lot
     """
     random.seed(seed)
-    np.random(seed)
+    np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     if deterministic:
