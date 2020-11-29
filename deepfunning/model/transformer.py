@@ -274,7 +274,7 @@ d_v=d_k
 
 def attention(query,key,value,mask=None,dropout=None):
     d_k=query.size(-1)
-    score=torch.matmul(query,key.transpose(-2,-1)) / math.sqrt(d_k)
+    scores=torch.matmul(query,key.transpose(-2,-1)) / math.sqrt(d_k)
     # divide by sqrt(d_k) in order to keep gradient stable
     '''
     (batch_size,head,max_seq_len, d_k) * (batch_size,head,max_seq_len,d_k)
