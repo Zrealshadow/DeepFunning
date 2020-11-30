@@ -4,43 +4,74 @@
  * @create date 2020-11-29 15:02:50
  * @desc BaseWrapper for model wrapper in deeplearning
 '''
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
+import typing as __t
 from pathlib import Path
 from datetime import datetime
 import torch
 import torch.nn as nn
-
+import warnings
+from deepfunning.base.basedataloader import BaseDataLoader
 
 class BaseWrapper(object):
     """Base class for Wrapper
     """
     def self(self,model:nn.Module, config:Dict):
         super(self,BaseWrapper).__self__()
+
+        self.required_mode = [
+            'loss_fn', 'checkpoint_epoch', 'print_step', 'batch_size', 'lr', 'checkpoint_dir', 'cuda',
+            'optim'
+            ]
+        F = lambda key:self.getconfigattr(key,config)
+        self.model = model
         self.device = torch.device(config['cuda']) if torch.cuda.is_available() else torch.device('cpu')
-
-        self.model = model.to(self.device)
-        self.loss_fn = config['loss_fn']
+        
+        self.loss_fn = self.__getconfigattr('loss_fn')
         self.start_epoch = 0
-        self.checkpoint_epoch = config['checkpoint_epoch']
-        self.print_step = config['print_step']
-        self.init_lr = config['lr']
+        self.checkpoint_epoch = self.getconnfigattr('checkpoinnt_epoch')
+        self.print_step = self.getconnfigattr('print_step')
+        self.init_lr = self.getconnfigattr('lr')
         self.best_model = self.model
-        self.batch_size = config['batch_size']
-        self.checkpoint_dir = config['checkpoint_dir']
+        self.batch_size = self.getconnfigattr('batch_size')
+        self.checkpoint_dir = self.getconnfigattr('checkpoint_dir')
+        
         #data_loader
-        self.train_dataloader = config['train_dataloader']
-        #subclass have to overwrite
-        self.optimizer = None
-        self.best_score = None
+        self.train_dataloader = self.getconfigattr('train_dataloader')
+        self.dev_dataloader = self.getconfigattr('dev_dataloader')
+        self.test_dataloader = self.getconfigattr('test_dataloader')
 
-    def __getattrfromconfig():
-        pass 
+        #subclass have to overwrite
+        self.optimizer = self.getconfigattr('optim')
+        self.best_score = 0.0
+
+    def getconfigattr(self,key:str,config:Dict)->Any:
+        if key not in config:
+            if key in self.required_mode:
+                raise ValueError('Attribute {} is required in this model wrapper'.format(key))
+            else:
+                warnings.warn('Attribute {} is not in config'.format(key))
+        return config.get(key, default=None)
+            
+
     def train(self):
+        raise NotImplementedError()
+    
+    @__t.overload
+    def train(self,train_dataloader:BaseDataLoader, dev_dataloader:Optional[BaseDataLoader]):
         raise NotImplementedError()
     
     def validation(self):
         raise NotImplementedError()
+    
+    @__t.overload
+    def validation(self,dev_dataloader:BaseDataLoader):
+        raise NotImplementedError()
 
+    def test_performance(self):
+        raise NotImplementedError()
+    
+    @__t.overload
     def test_performance(self):
         raise NotImplementedError()
 
